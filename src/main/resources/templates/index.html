@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Lover's Compatibility Checker</title>
+    <!-- Add any necessary CSS or other head elements here -->
+</head>
+<body>
+
+<h1>Lover's Compatibility Checker</h1>
+
+<form action="/checkCompatibility" method="post">
+    <label for="yourName">Your Name:</label>
+    <input type="text" id="yourName" name="yourName" required/>
+
+    <div id="partnerNames">
+        <div class="partner" th:each="partner,iterStat : ${#numbers.sequence(0, 0)}">
+            <label th:for="${'partner_' + iterStat.index}" >Partner's Name:</label>
+            <input type="text" th:id="${'partner_' + iterStat.index}" class="partnerName" name="partnerNames" required/>
+        </div>
+    </div>
+
+    <div  th:each="result, iterStat : ${compatibilityResults}">
+        <div th:if="iterStat" th:text="${'Result ' + (iterStat.index + 1) + ': ' + result}"></div>
+    </div>
+    <button type="button" onclick="addPartner()">Add Partner</button>
+    <button type="submit">Check Compatibility</button>
+</form>
+
+<!-- Display the compatibility result here -->
+
+
+<script th:inline="javascript">
+    function addPartner() {
+        var partnerDiv = document.getElementById('partnerNames');
+        var newPartnerDiv = document.createElement('div');
+        newPartnerDiv.className = 'partner';
+        var index = document.querySelectorAll('.partner').length;
+        newPartnerDiv.innerHTML =
+            '<label th:for="${\'partner_\' + ' + index + '}" th:text="#{lovers.partner}">Partner\'s Name:</label>' +
+            '<input type="text" th:id="${\'partner_\' + ' + index + '}" class="partnerName" name="partnerNames" required/>';
+        partnerDiv.appendChild(newPartnerDiv);
+    }
+</script>
+
+</body>
+</html>
